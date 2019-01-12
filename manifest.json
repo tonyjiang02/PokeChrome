@@ -16,5 +16,8 @@
     ],
     "icons": {
         "128": "icon.png"
+    },
+    "content-scripts": {
+        
     }
 }
