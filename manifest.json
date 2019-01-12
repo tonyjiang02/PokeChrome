@@ -5,14 +5,10 @@
     "browser_action": {
         "default_popup": "popup.html"
     },
+    "content_security_policy":"script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
     "background": {
-        "page": "background.html",
-        "scripts": [
-            "jquery-3.3.1.min.js",
-            "background.js"
-        ]
+        "page": "background.html"
     },
-    "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'; connect-src 'self' wss://*.firebaseio.com;",
     "permissions": [
         "storage"
     ],

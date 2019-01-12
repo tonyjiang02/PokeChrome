@@ -22,14 +22,23 @@ db.collection("users").add({
 .catch(function(error) {
     console.error("Error adding document: ", error);
 });
-// chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    var req = request;
+    createUser(request);
+});
+function createUser(credentials) {
+    var user = credentials.user;
+    var password = credentials.password;
+    var data = {
+        username:user,
+        password:password
+    }
+    db.collection("users").doc(user).set(data).then() {
+        console.log("successfully added user");
+    }
+}
+function storeCredentials(credentials) {
+    var username = credentials.username;
+    var password = credentials.password;
 
-// });
-// function createUser(credentials) {
-
-// }
-// function storeCredentials(credentials) {
-//     var username = credentials.username;
-//     var password = credentials.password;
-
-// }
+}
