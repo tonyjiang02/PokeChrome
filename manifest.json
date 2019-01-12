@@ -11,8 +11,7 @@
     },
     "permissions": [
         "storage",
-        "tabs",
-        "storage"
+        "tabs"
     ],
     "icons": {
         "128": "icon.png"

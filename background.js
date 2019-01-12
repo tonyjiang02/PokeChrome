@@ -16,16 +16,21 @@ var db = firebase.firestore();
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     console.log("got message from popup");
     var req = request;
-    createUser(request);
-    storeCredentials(request);
+    if (request.isLogin) {
+        console.log("request got");
+        storeCredentials(request);
+    }
+    else {
+        createUser(request);
+    }
     spawnPokemon();
 });
 function spawnPokemon(id) {
-    alert("A wild pokemon has appeared");
+    //alert("A wild pokemon has appeared");
     var obj = {
         url: "./pokemon.html"
     }
-    chrome.tabs.create(obj)
+    //chrome.tabs.create(obj)
 }
 function createUser(credentials) {
     var user = credentials.username;
@@ -68,8 +73,7 @@ function createUser(credentials) {
 function storeCredentials(credentials) {
     var username = credentials.username;
     var password = credentials.password;
-    chrome.storage.local.set({
-        'username':username,
-        'password':password
-    })
+
+    localStorage.setItem('username', username);
+    localStorage.setItem('password', password);
 }
