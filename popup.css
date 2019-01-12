@@ -13,8 +13,64 @@ label{
 
 #loginGrid{
     display: grid; 
-    grid-column: 1;
+    grid-template-columns: 100px auto 100px;
+    align-items: center;
     justify-items: center;
+}
+
+#loginGrid input{
+    grid-column: 1 / span 3;
+}
+
+#loginGrid .switch{
+    position: relative;
+    display: inline-block;
+    width: 25px;
+    height: 17px;
+    margin: 0px;
+
+    font-size: 10px;
+}
+#loginGrid .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+#loginGrid .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ff00cc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+#loginGrid .slider::before {
+    position: absolute;
+    content: "";
+    height: 75%;
+    width: 50%;
+    left: 10%;
+    bottom: 10%;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+#loginGrid .switch input:checked + .slider {
+    background-color: #2196F3;
+}   
+#loginGrid .switch input:checked + .slider::before {
+    -webkit-transform: translateX(50%);
+    -ms-transform: translateX(50%);
+    transform: translateX(50%);
+}
+#loginGrid .switch .slider.round {
+    border-radius: 1em;
+}
+#loginGrid .switch .slider.round:before {
+    border-radius: 50%;
 }
 
 #main{
@@ -28,26 +84,38 @@ label{
 }
 
 label.title{
+    display: block;
+    
     font-size: 30px;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 }
 
 label.subtitle{
-    font-size: 20px;
+    font-size: 13px;
 }
 
 label.info, label.value {
     font-size: 10px;
 }
 
-label.info{
+label.info {
     grid-column: 1;
-    align-self: start;
+}
+
+label.value {
+    grid-column: 2;
+}
+
+label.left{
+    margin-left: 5px;
     justify-self: start;
 }
 
-label.value{
-    grid-column: 2;
-    align-self: end;
+label.right{
+    margin-right: 5px;
     justify-self: end;
+}
+
+label.center{
+    justify-self: center;
 }

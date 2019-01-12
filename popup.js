@@ -8,4 +8,5 @@ document.getElementById("loginGrid").onsubmit = function(e){
 
 window.onload = function() {
     document.getElementById("pokecoin-value").innerHTML = "0";
+    document.getElementById("login-checkbox").checked = true;
 }
