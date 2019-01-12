@@ -1,4 +1,5 @@
 body{
+    padding: 10px;
 }
 input{
     margin-top: 5px;
@@ -7,25 +8,46 @@ input{
 }
 label{
     text-align: center;
-    font-size: 25px;
-
-    margin-bottom: 15px;
+    margin-bottom: 5px;
 }
 
 #loginGrid{
     display: grid; 
     grid-column: 1;
-
-    margin-left: 15px;
-    margin-right: 15px;
     justify-items: center;
 }
 
 #main{
     display: none;
-    grid-column: 1;
-
-    margin-left: 15px;
-    margin-right: 15px;
+    grid-column: 2;
     justify-items: center;
+}
+
+#pokecoin-value::before{
+    content: "$";
+}
+
+label.title{
+    font-size: 30px;
+    margin-bottom: 25px;
+}
+
+label.subtitle{
+    font-size: 20px;
+}
+
+label.info, label.value {
+    font-size: 10px;
+}
+
+label.info{
+    grid-column: 1;
+    align-self: start;
+    justify-self: start;
+}
+
+label.value{
+    grid-column: 2;
+    align-self: end;
+    justify-self: end;
 }
