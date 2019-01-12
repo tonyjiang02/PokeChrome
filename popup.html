@@ -1,9 +1,17 @@
 <head>
-<script src = "popup.js"></script>
+<script defer src = "popup.js"></script>
+<link rel = "stylesheet" href = "popup.css">
 </head>
 <body>
-    <form>
+    <form id = "loginGrid">
+        <label>Please Login</label>
         <input type = "text">
         <input type = "password">
+        <input type = "submit" value = "Submit">
     </form>
+
+    <div id = "main">
+        <label>PokéChrome</label>
+        <label class="info">PokéCoin: </label>
+    </div>
 </body>
