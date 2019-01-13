@@ -22,16 +22,15 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
     else {
         createUser(request);
-        storeCredentials(request);
     }
-    spawnPokemon();
+    spawnPokemon(1);
 });
 function spawnPokemon(id) {
-    //alert("A wild pokemon has appeared");
-    var obj = {
-        url: "./pokemon.html"
-    }
-    //chrome.tabs.create(obj)
+    console.log("spawning Pokemon");
+    chrome.runtime.sendMessage({
+        msg:"spawn_pokemon",
+        pokemon_id:id
+    })
 }
 function createUser(credentials) {
     var user = credentials.username;
@@ -67,6 +66,7 @@ function createUser(credentials) {
             })
             db.collection("users").doc(user).set(dataUser).then(function () {
                 console.log("successfully added user");
+                storeCredentials(credentials);
             });
         }
     })
