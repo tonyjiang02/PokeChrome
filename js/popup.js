@@ -85,8 +85,8 @@ document.getElementById("timer-checkbox").onchange = function() {
     var onTimer = document.getElementById("timer-checkbox").checked;
     if(onTimer) {
         localStorage.setItem('timer', true);
-    }else {
-        localStorage.setItem('timer',false);
+    } else {
+        localStorage.removeItem("timer");
     }
 }
 function logout() {
@@ -139,6 +139,10 @@ window.onload = function () {
         validate();
         login(true, localStorage.getItem("username"), localStorage.getItem("password"));
         getMoney(localStorage.getItem("username"), localStorage.getItem("password"));
+    }
+
+    if (localStorage.getItem("timer")){
+        document.getElementById("timer-checkbox").checked = true;
     }
 
     document.getElementById("login-checkbox").checked = true;
