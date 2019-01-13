@@ -1,4 +1,19 @@
+:root{
+    --create-acc-color: #ff00cc;
+    --login-color: #2196F3;
+    --glow-color: #ff9000;
+    --background-color: #cfcfcf; 
+}
+
+@font-face {
+    font-family: press-start;
+    src: url(press-start.ttf);
+}
+
 body{
+    font-family: press-start;
+    color: black;
+    text-shadow: 0px 0px 5px var(--glow-color);
     padding: 10px;
 }
 input{
@@ -9,6 +24,9 @@ input{
 label{
     text-align: center;
     margin-bottom: 5px;
+}
+button{
+    outline: none;
 }
 
 #loginGrid{
@@ -43,7 +61,7 @@ label{
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ff00cc;
+    background-color: var(--create-acc-color);
     -webkit-transition: .4s;
     transition: .4s;
 }
@@ -59,7 +77,7 @@ label{
     transition: .4s;
 }
 #loginGrid .switch input:checked + .slider {
-    background-color: #2196F3;
+    background-color: var(--login-color);
 }   
 #loginGrid .switch input:checked + .slider::before {
     -webkit-transform: translateX(50%);
@@ -75,12 +93,30 @@ label{
 
 #main{
     display: none;
-    grid-column: 2;
+    grid-template-columns: auto auto;
     justify-items: center;
+
+    background-color: var(--background-color);
+    border-radius: 5px;
+    padding: 5px;
+    padding-top: 15px;
+
+    min-height: 200px;
+}
+
+#main button{
+    grid-column: 1 / span 2;
+    max-height: 30px;
+
+    border-radius: 5px;
+    background-color: white;
+    border-color: white;
+    align-self: end;
 }
 
 #pokecoin-value::before{
     content: "$";
+    word-spacing: -2px;
 }
 
 label.title{
@@ -95,7 +131,7 @@ label.subtitle{
 }
 
 label.info, label.value {
-    font-size: 10px;
+    font-size: 13px;
 }
 
 label.info {
