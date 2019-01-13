@@ -14,11 +14,12 @@
         </label>
         <label class = "center subtitle">Login</label>
         <br>
-        <input type = "text" id = "login-username" placeholder = "Username">
-        <input type = "password" id = "login-password" placeholder = "Password">
+        <input type = "text" id = "login-username" placeholder = "Username" required>
+        <input type = "password" id = "login-password" placeholder = "Password" required>
         <input type = "submit" id = "login-submit" value = "Submit">
     </form>
-
+    <div id = "error" style = "display:none">
+    </div>
     <div id = "main">
         <label class = "left info">Pok&eacuteCoin: </label>
         <label class = "right value" id = "pokecoin-value"></label>

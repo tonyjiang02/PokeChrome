@@ -9,15 +9,60 @@ var config = {
 };
 firebase.initializeApp(config);
 db = firebase.firestore();
+function hasUsername(username,data) {
+    var master = db.collection("users").doc("master");
+    master.get().then(function (doc) {
+        var data = doc.data();
+        var users = data.users;
+        var found = false;
+        for (var i = 0; i < users.length; i++) {
+            if (users[i] == username) {
+                found = true;
+                break;
+            }
+        }    
+        if (found) {
+            notUnique();
+        } else {
+            loginSuccess(data);
+        }
+    })
+}
+function checkPassword(username,password, data) {
+    var doc = db.collection('users').doc(username);
+    doc.get().then(function(doc) {
+        var pass = doc.data().password;
+        if(password === pass) {
+            loginSuccess(data)
+        }else{
+            passwordError();
+        }
+    }).catch(function(error) {
+        console.log(error);
+        passwordError();
+    })
+}
 function getMoney(username, password) {
     var document = db.collection("users").doc(username);
-    document.get().then(function(doc) {
-        var money = doc.data().pokecoins;
-        setMoney(money)
+    document.get().then(function (doc) {
+        if(password == doc.data().password) {
+            var money = doc.data().pokecoins;
+            setMoney(money)
+        }
     })
 }
 function setMoney(money) {
     document.getElementById("pokecoin-value").innerHTML = money;
+}
+function notUnique() {
+    var error = document.getElementById("error");
+    error.innerHTML = "Username already exists";
+    error.style.display = "block";
+}
+function passwordError() {
+    var error = document.getElementById("error");
+    error.innerHTML = "Password incorrect or user doesn't exist";
+    error.style.display = "block";
 }
 function login(isLogin, username, password) {
     var data = {
@@ -26,21 +71,29 @@ function login(isLogin, username, password) {
         username: username,
         password: password
     }
-
+    if(isLogin) {
+        checkPassword(username,password,data)
+    }else {
+        hasUsername(username,data);
+    }
+}
+function loginSuccess(data) {
     chrome.runtime.sendMessage(data);
+    document.getElementById("error").innerHTML = "";
+    document.getElementById("error").style.display = "none";
     document.getElementById("loginGrid").style.display = "none";
     document.getElementById("main").style.display = "grid";
 }
 
-function logout(){
+function logout() {
     localStorage.clear();
     document.getElementById("loginGrid").style.display = "grid";
     document.getElementById("main").style.display = "none";
 }
 
-document.getElementById("login-checkbox").onclick = function(){
+document.getElementById("login-checkbox").onclick = function () {
     var color;
-    if (document.getElementById("login-checkbox").checked){
+    if (document.getElementById("login-checkbox").checked) {
         color = getComputedStyle(document.body).getPropertyValue('--login-color');
     } else {
         color = getComputedStyle(document.body).getPropertyValue('--create-acc-color');
@@ -50,7 +103,7 @@ document.getElementById("login-checkbox").onclick = function(){
     document.getElementById("login-submit").style.borderColor = color;
 }
 
-document.getElementById("loginGrid").onsubmit = function(e){
+document.getElementById("loginGrid").onsubmit = function (e) {
     e.preventDefault();
     var isLogin = document.getElementById("login-checkbox").checked;
     var username = document.getElementById("login-username").value;
@@ -59,35 +112,38 @@ document.getElementById("loginGrid").onsubmit = function(e){
     login(isLogin, username, password);
 }
 
-document.getElementById("spawn").onclick = function(){
+document.getElementById("spawn").onclick = function () {
     chrome.runtime.sendMessage({
         msg: "spawn"
     });
 }
-
-document.getElementById("logout").onclick = function(){
+function validate() {
+    document.getElementById("loginGrid").style.display = "none";
+    document.getElementById("main").style.display = "grid";
+}
+document.getElementById("logout").onclick = function () {
     logout();
 }
-document.getElementById("showDashboard").onclick = function() {
+document.getElementById("showDashboard").onclick = function () {
     chrome.runtime.sendMessage({
-        msg:"openDashboard"
+        msg: "openDashboard"
     })
 }
 
-window.onload = function() {
+window.onload = function () {
     if (localStorage.getItem("username")) {
-        login(false, localStorage.getItem("username"), localStorage.getItem("password"));
+        validate();
+        login(true, localStorage.getItem("username"), localStorage.getItem("password"));
         getMoney(localStorage.getItem("username"), localStorage.getItem("password"));
     }
-    
+
     document.getElementById("login-checkbox").checked = true;
     document.getElementById("pokecoin-value").innerHTML = "--";
 }
-chrome.runtime.onMessage.addListener(function(request,sender,sendResponse) {
-    if(request.msg === "storage_set"){
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.msg === "storage_set") {
         var username = localStorage.getItem("username");
         var password = localStorage.getItem("password");
         getMoney(username, password);
     }
 })
-    
