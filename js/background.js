@@ -58,7 +58,7 @@ function randomize() {
         interval = setInterval('randomize()', rand)
     }
 }
-//interval = setInterval('randomize()', rand);
+// interval = setInterval('randomize()', rand);
 function spawnPokemon(id) {
     $.ajax({
         type: "GET",
