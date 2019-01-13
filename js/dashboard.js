@@ -233,28 +233,29 @@ function addButtonListeners() {
             var merchant = db.collection('users').doc(seller);
             merchant.get().then(function (doc) {
                 var data = doc.data();
-                data["pokecoins"] = parseInt(data["pokecoins"],10) + parseInt(price,10);
+                data["pokecoins"] = data["pokecoins"] + parseInt(price);
                 merchant.set(data);
-            })
-            var receiver = db.collection('users').doc(localStorage.getItem("username"));
-            receiver.get().then(function (doc) {
-                var data = doc.data();
-                data['pokecoins'] = parseInt(data['pokecoins'],10) - parseInt(price,10);
-                var url = "https://pokeapi.co/api/v2/pokemon/";
-                $.ajax({
-                    type: "GET",
-                    url: url + pokemon.toLowerCase(),
-                    success: function (response, status, xhr) {
-                        var obj = {
-                            id: response.id,
-                            name: response.name,
-                            sprite: response.sprites['front_default']
+
+                var receiver = db.collection('users').doc(localStorage.getItem("username"));
+                receiver.get().then(function (doc) {
+                    var data = doc.data();
+                    data['pokecoins'] = parseInt(data['pokecoins'],10) - parseInt(price,10);
+                    var url = "https://pokeapi.co/api/v2/pokemon/";
+                    $.ajax({
+                        type: "GET",
+                        url: url + pokemon.toLowerCase(),
+                        success: function (response, status, xhr) {
+                            var obj = {
+                                id: response.id,
+                                name: response.name,
+                                sprite: response.sprites['front_default']
+                            }
+                            data['party'].push(obj);
+                            receiver.set(data);
+                        },
+                        error: function (xhr, status, error) {
                         }
-                        data['party'].push(obj);
-                        receiver.set(data);
-                    },
-                    error: function (xhr, status, error) {
-                    }
+                    })
                 })
             })
             delete data[reference]
