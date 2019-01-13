@@ -28,8 +28,9 @@ function getData(username, container) {
         if(username === localStorage.getItem("username")) {
             partyList = party;
             moneyAmount = money;
-            initSelect(partyList);
+            initSelect(partyList,"pokemon-select");
         }
+        initSelect(partyList,"duster-select")
     })
 }
 function renderData(party, container) {
@@ -75,22 +76,22 @@ function updateData(money, party) {
         party: party
     })
 }
-function initSelect(party) {
-    clearSelect();
-
-    var select = document.getElementById("pokemon-select");
+function initSelect(party,id) {
+    clearSelect(id);
+    var select = document.getElementById(id);
     for (var i = 0; i < party.length; i++) {
         var option = document.createElement('option');
         option.innerHTML = party[i].name.charAt(0).toUpperCase() + party[i].name.substr(1, party[i].name.length - 1);
         select.appendChild(option);
     }
 }
+
 function removePokemon(index) {
     partyList.splice(index, 1);
     updateData(moneyAmount, partyList);
 }
-function clearSelect() {
-    var select = document.getElementById("pokemon-select");
+function clearSelect(id) {
+    var select = document.getElementById(id);
     while(select.firstChild)
         select.removeChild(select.firstChild);
 }
@@ -290,4 +291,16 @@ function clearMarket() {
 document.getElementById("searchSubmit").onclick = function (e) {
     e.preventDefault();
     getData(document.getElementById("search-username").value, document.getElementById("searchGrid"));
+}
+$(document).ready(function() {
+    addDusterListeners();
+})
+function addDusterListeners() {
+    $("#dusterSubmit").click(function() {
+        var index = document.getElementById("duster-select").selectedIndex;
+        partyList.splice(index, 1);
+        moneyAmount = parseInt(moneyAmount) + 5;
+        updateData(moneyAmount, partyList);
+        initSelect(partyList,"duster-select");
+    })
 }

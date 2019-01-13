@@ -1,5 +1,3 @@
-
-
 var config = {
     apiKey: "AIzaSyCRyVEh2975haA9Yi3aGaRfO-LBcY8E93c",
     authDomain: "pokechrome-73fa4.firebaseapp.com",
