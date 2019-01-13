@@ -61,7 +61,7 @@ hr{
     grid-column: 1 / span 3;
 }
 
-#loginGrid .switch{
+.switch{
     position: relative;
     display: inline-block;
     width: 25px;
@@ -70,23 +70,31 @@ hr{
 
     font-size: 10px;
 }
-#loginGrid .switch input {
+.switch input {
     opacity: 0;
     width: 0;
     height: 0;
 }
-#loginGrid .slider {
+.slider {
     position: absolute;
     cursor: pointer;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: var(--create-acc-color);
     -webkit-transition: .4s;
     transition: .4s;
 }
-#loginGrid .slider::before {
+
+#loginForm .slider{
+    background-color: var(--create-acc-color);
+}
+
+#timer-switch .slider{
+    background-color: gray;
+}
+
+.slider::before {
     position: absolute;
     content: "";
     height: 75%;
@@ -97,18 +105,21 @@ hr{
     -webkit-transition: .4s;
     transition: .4s;
 }
-#loginGrid .switch input:checked + .slider {
+#loginForm .switch input:checked + .slider {
     background-color: var(--login-color);
 }   
-#loginGrid .switch input:checked + .slider::before {
+#timer-switch.switch input:checked + .slider {
+    background-color: greenyellow;
+}   
+.switch input:checked + .slider::before {
     -webkit-transform: translateX(50%);
     -ms-transform: translateX(50%);
     transform: translateX(50%);
 }
-#loginGrid .switch .slider.round {
+.switch .slider.round {
     border-radius: 1em;
 }
-#loginGrid .switch .slider.round:before {
+.switch .slider.round:before {
     border-radius: 50%;
 }
 
@@ -132,7 +143,7 @@ hr{
 
     display: none;
     grid-template-columns: auto auto;
-    grid-template-rows: 25px auto 25px 25px;
+    grid-template-rows: 25px auto 25px 25px 25px;
     justify-items: center;
 
     border-radius: 5px;
