@@ -113,7 +113,7 @@ function clearParty(container) {
 }
 var snapshotParty = db.collection("users").doc(localStorage.getItem("username"));
 snapshotParty.onSnapshot({
-    includeMetadataChanges: true,
+    includeMetadataChanges: true
 }, function(doc) {
     var container = document.getElementById("userGrid");
     clearParty(container);
