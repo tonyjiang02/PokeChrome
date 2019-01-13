@@ -12,6 +12,8 @@
     left: 0;
     right: 0;
     bottom: 0;
+
+    z-index: 2147483647;
 }
 #label-pokecoin-pokemon {
     font-family: press-start;
@@ -19,16 +21,12 @@
     color: black;
 
     position: fixed;
-    top: 10%;
-    left: 20%;
 }
 #sprite-pokecoin-pokemon {
     position: fixed; /* Sit on top of the page content */
     display: block;
     width: 200px;
     height: 200px;
-    top: 20%; 
-    left: 40%;
 
     -webkit-user-select: none;
     -khtml-user-select: none;

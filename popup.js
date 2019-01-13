@@ -12,7 +12,6 @@ db = firebase.firestore();
 function getMoney(username, password) {
     var document = db.collection("users").doc(username);
     document.get().then(function(doc) {
-        console.log(doc.data());
         var money = doc.data().pokecoins;
         setMoney(money)
     })
@@ -60,6 +59,12 @@ document.getElementById("loginGrid").onsubmit = function(e){
     login(isLogin, username, password);
 }
 
+document.getElementById("spawn").onclick = function(){
+    chrome.runtime.sendMessage({
+        msg: "spawn"
+    });
+}
+
 document.getElementById("logout").onclick = function(){
     logout();
 }
@@ -80,7 +85,6 @@ window.onload = function() {
 }
 chrome.runtime.onMessage.addListener(function(request,sender,sendResponse) {
     if(request.msg === "storage_set"){
-        console.log("finished storage")
         var username = localStorage.getItem("username");
         var password = localStorage.getItem("password");
         getMoney(username, password);
