@@ -9,50 +9,27 @@ var config = {
 firebase.initializeApp(config);
 var url = "https://pokeapi.co/api/v2/pokemon/";
 db = firebase.firestore();
-var party;
-var money;
-var username = localStorage.getItem("username");
-var password = localStorage.getItem("password");
-$(document).ready(function () {
-    getData(renderData);
-    renderMarketplace();
+
+$(document).ready(function() {
+    getData(localStorage.getItem("username"), document.getElementById("userGrid"));
 })
-function getData(callback) {
+function getData(username, container) {
+    while(container.firstChild) 
+        container.removeChild(container.firstChild);
+
     var userDoc = db.collection("users").doc(username);
     userDoc.get().then(function (doc) {
         money = doc.data().pokecoins;
         party = doc.data().party;
-        console.log(party);
-        console.log(money);
-        callback();
+        renderData(party, container);
     })
 }
-function updateData() {
-    var userDoc = db.collection("users").doc(username);
+function updateData(money, party) {
+    var userDoc = db.collection("users").doc(localStorage.getItem("username"));
     userDoc.update({
         money: money,
         party: party
     })
-}
-function renderData() {
-    var container = document.getElementById("container");
-    for (var i = 0; i < party.length; i++) {
-        var row = document.createElement('div');
-        row.setAttribute('class', 'row');
-        var col1 = document.createElement('div');
-        col1.setAttribute('class', 'col-md-2');
-        var col2 = document.createElement('div');
-        col2.setAttribute('class', 'col-md-4');
-        col1.innerHTML = party[i].name;
-        var img = document.createElement('img');
-        img.setAttribute('src', party[i].sprite);
-        img.style.width = "40px";
-        img.style.height = "40px";
-        col2.appendChild(img);
-        row.appendChild(col1);
-        row.appendChild(col2);
-        container.appendChild(row);
-    }
 }
 function addSale(seller, pokemon, price) {
     var forSale = db.collection("marketplace").doc("forSale");
@@ -107,4 +84,42 @@ function clearMarket() {
     while (market.firstChild) {
         market.removeChild(market.firstChild);
     }
+}
+function renderData(party, container) {
+    for(var i = 0; i < party.length; i++) {
+        var containsAlready = false;
+        var j = 0;
+        for (j = 0; !containsAlready && j < container.children.length; j++) {
+            if (container.children.item(j).innerHTML.toLowerCase() === party[i].name)
+                containsAlready = true;
+        }
+        j--;
+
+        if (containsAlready){
+            var countstr = container.children.item(j).getAttribute("count");
+            var count = parseInt(countstr.substr(1, countstr.length - 2));
+            container.children.item(j).setAttribute("count", "(" + (count + 1).toString() + ")");
+        } else {
+            var name = document.createElement('div');
+            name.setAttribute('class','left');
+            name.setAttribute('id', 'pokename');
+            name.setAttribute('count', "(1)");
+            name.innerHTML = party[i].name.charAt(0).toUpperCase() + party[i].name.substr(1, party[i].name.length - 1);
+            container.appendChild(name);
+
+            var icon = document.createElement('div');
+            icon.setAttribute('class','right');
+            var img = document.createElement('img');
+            img.setAttribute('src', party[i].sprite);
+            img.style.width = "40px";
+            img.style.height = "40px";
+            icon.appendChild(img);
+            container.appendChild(icon);
+        }
+    }
+}
+
+document.getElementById("searchSubmit").onclick = function(e){
+    e.preventDefault();
+    getData(document.getElementById("search-username").value, document.getElementById("searchGrid"));
 }

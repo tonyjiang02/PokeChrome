@@ -1,0 +1,68 @@
+:root{
+    --glow-color: #ff9000;
+    --background-color: #cfcfcf; 
+}
+
+@font-face {
+    font-family: press-start;
+    src: url(/resources/press-start.ttf);
+}
+
+body{
+    font-family: press-start;
+    color: black;
+    text-shadow: 0px 0px 5px var(--glow-color);
+    padding: 10px;
+    padding-bottom: 20px;
+}
+
+button, input{
+    outline: none;
+    border-radius: 5px;
+    padding: 2px;
+}
+
+form input[type=submit]{
+    background-color: white;
+    border-color: white;
+}
+
+#pokename::after{
+    content: attr(count);
+    margin-left: 3px;
+    color: gray;
+}
+
+.partyGrid{
+    display: grid;
+    grid-template-columns: 80% 20%;
+    justify-items: center;
+
+    width: 100%;
+    max-height: 100%;
+    overflow: auto;
+}
+
+.dash-container{
+    border-radius: 5px;
+    background-color: var(--background-color);
+    padding: 5px;
+    padding: 10px;
+
+    min-width: 250px;
+    width: max-content;
+}
+
+.left, .right, #pokename::after{
+    align-self: center;
+}
+
+.left{
+    margin-left: 5px;
+    justify-self: start;
+}
+
+.right{
+    margin-right: 5px;
+    justify-self: end;
+}

@@ -116,22 +116,24 @@ button, input{
 
     display: none;
     grid-template-columns: auto auto;
+    grid-template-rows: 25px auto 25px 25px;
     justify-items: center;
-    align-self: end;
 
     border-radius: 5px;
     background-color: var(--background-color);
     padding: 5px;
-    padding-top: 15px;
 }
 
 #main button{
-    grid-column: 1 / span 2;
     max-height: 30px;
 
     background-color: white;
     border-color: white;
     align-self: end;
+}
+
+#main button.center{
+    grid-column: 1 / span 2;
 }
 
 #pokecoin-value::before{
@@ -154,24 +156,28 @@ label.info, label.value {
     font-size: 13px;
 }
 
-label.info {
+label.info, #main .left {
     grid-column: 1;
 }
 
-label.value {
+label.value, #main .right{
     grid-column: 2;
 }
 
-label.left{
+label.left, label.right {
+    align-self: center;
+}
+
+.left{
     margin-left: 5px;
     justify-self: start;
 }
 
-label.right{
+.right{
     margin-right: 5px;
     justify-self: end;
 }
 
-label.center{
+.center{
     justify-self: center;
 }

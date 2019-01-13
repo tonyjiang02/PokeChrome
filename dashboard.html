@@ -7,9 +7,16 @@
 
 <body>
     <h1>Pok&eacutemon Party: </h1>
-    <div class = "container" id = "container">
-        <div class = "marketplace" id = "marketplace" style="float:right">
-            
-        </div>
+    <div class = "dash-container" style = "height: 300px">
+        <div class = "partyGrid" id = "userGrid"></div>
+    </div>
+
+    <h1>Pok&eacutemon Party Search: </h1>
+    <div class = "dash-container">
+        <form>
+            <input type="text" id = "search-username" placeholder="Username Lookup">
+            <input type="submit" id = "searchSubmit" style = "float: right; margin-right: 10px;" value="Submit">
+        </form>
+        <div class = "partyGrid" id = "searchGrid" style = "max-height: 210px"></div>
     </div>
 </body>
