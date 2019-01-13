@@ -18,7 +18,7 @@ function createOverlay(pokemonData) {
     
     var label = document.createElement('label');
     label.setAttribute('id', 'label-pokecoin-pokemon');
-    label.innerHTML = "!!! A Wild Pokemon Has Appeared !!!";
+    label.innerHTML = "!!! A Wild Pokémon Has Appeared !!!";
     label.style.left = posX.toString() + "%";
     label.style.top = posY.toString() + "%";
     overlay.appendChild(label);

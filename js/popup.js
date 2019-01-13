@@ -38,7 +38,6 @@ function checkPassword(username,password, data) {
             passwordError();
         }
     }).catch(function(error) {
-        console.log(error);
         passwordError();
     })
 }
@@ -57,12 +56,10 @@ function setMoney(money) {
 function notUnique() {
     var error = document.getElementById("error");
     error.innerHTML = "Username already exists";
-    error.style.display = "block";
 }
 function passwordError() {
     var error = document.getElementById("error");
     error.innerHTML = "Password incorrect or user doesn't exist";
-    error.style.display = "block";
 }
 function login(isLogin, username, password) {
     var data = {
@@ -80,7 +77,6 @@ function login(isLogin, username, password) {
 function loginSuccess(data) {
     chrome.runtime.sendMessage(data);
     document.getElementById("error").innerHTML = "";
-    document.getElementById("error").style.display = "none";
     document.getElementById("loginGrid").style.display = "none";
     document.getElementById("main").style.display = "grid";
 }
