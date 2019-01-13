@@ -8,7 +8,7 @@ var config = {
     messagingSenderId: "758158114370"
 };
 firebase.initializeApp(config);
-
+var url = "https://pokeapi.co/api/v2/pokemon/";
 // Initialize Cloud Firestore through Firebase
 var globalUser;
 var globalPassword;
@@ -27,11 +27,26 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 function spawnPokemon(id) {
     console.log("spawning Pokemon");
-    chrome.runtime.sendMessage({
-        msg:"spawn_pokemon",
-        pokemon_id:id
+    $.ajax({
+        type:"GET",
+        url:url+id,
+        success:function(response,status,xhr) {
+            pokemondata = response;
+            console.log("succeeded getting pokemon data")
+            console.log(response);
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                chrome.tabs.sendMessage(tabs[0].id,{
+                    msg:"spawn_pokemon",
+                    pokemonData:response
+                })
+            })
+        },
+        error:function(xhr,status,error) {
+            console.log(error)
+        }
     })
 }
+
 function createUser(credentials) {
     var user = credentials.username;
     var password = credentials.password;
