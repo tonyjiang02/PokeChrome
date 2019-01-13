@@ -25,7 +25,6 @@ var idPokemon = [[10,13,16,17,19,20,21,22,23,27,28,29,30,32,33,39,41,42,43,44,46
             [2,3,5,6,8,9,18,31,34,38,59,65,76,94,103,121,134,135,136,137,138,139,140,141,142,144,145,146,149,150,151]];
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.msg === "login") {
-        var req = request;
         if (request.isLogin) {
             storeCredentials(request);
         }
