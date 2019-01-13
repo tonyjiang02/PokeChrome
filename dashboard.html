@@ -6,28 +6,31 @@
 </head>
 
 <body>
-    <h1>Pok&eacutemon Party: </h1>
-    <div class = "dash-container" style = "height: 300px">
-        <div class = "partyGrid" id = "userGrid"></div>
-    </div>
-    <div id = "sellPlace" style="">
-        <label>Sell Pokemon</label>
-        <select id = "pokemon_select" required>
+    <div id = "gridLayout">
+        <h1 style="grid-column: 1;">Pok&eacutemon Party: </h1>
+        <h1 style="margin-left: 9%; grid-column: 2;">Pok&eacutemon Market: </h1>
+        <div class = "dash-container" style = "grid-column: 1;">
+            <div class = "partyGrid" id = "userGrid"></div>
+        </div>
+        <div class = "dash-container marketContainer" style = "grid-column: 2;">
+            <div id = "marketplace"></div>
+        </div>
+        <h1 style="grid-column: 1;">Pok&eacutemon Party Search: </h1>
+        <div id = "sellPlace" style="grid-column: 2; justify-self: end;">
+            <label>Sell Pokemon</label>
+            <select id = "pokemon_select" required>
 
-        </select>
-        <label>Price:</label>
-        <input id = "sellPrice" type = "number"required>
-        <input id = "submitSale" type = "submit" value = "Sell">
-    </div>
-    <div id = "marketplace" class = "marketplace" style = "">
-        
-    </div>
-    <h1>Pok&eacutemon Party Search: </h1>
-    <div class = "dash-container">
-        <form>
-            <input type="text" id = "search-username" placeholder="Username Lookup">
-            <input type="submit" id = "searchSubmit" style = "float: right; margin-right: 10px;" value="Submit">
-        </form>
-        <div class = "partyGrid" id = "searchGrid" style = "max-height: 210px"></div>
+            </select>
+            <label>Price:</label>
+            <input id = "sellPrice" type = "number" required>
+            <input id = "submitSale" type = "submit" value = "Sell">
+        </div>
+        <div class = "dash-container" style = "grid-column: 1; height: max-content;">
+            <form>
+                <input type="text" id = "search-username" placeholder="Username Lookup">
+                <input type="submit" id = "searchSubmit" style = "float: right; margin-right: 10px;" value="Submit">
+            </form>
+            <div class = "partyGrid" id = "searchGrid" style = "max-height: 210px"></div>
+        </div>
     </div>
 </body>

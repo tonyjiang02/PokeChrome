@@ -24,7 +24,6 @@ function getData(username, container) {
         var party = doc.data().party;
         renderData(party, container);
         if(username === localStorage.getItem("username")) {
-            console.log('render own')
             partyList = party;
             moneyAmount = money;
             initSelect(partyList);
@@ -61,7 +60,6 @@ document.getElementById('submitSale').onclick = function () {
     renderMarketplace();
 }
 function addSale(seller, pokemon, price) {
-    console.log("adding sale");
     var forSale = db.collection("marketplace").doc("forSale");
     var uuid = guid();
     var obj = {
