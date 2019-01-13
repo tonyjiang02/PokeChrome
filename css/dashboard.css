@@ -1,6 +1,7 @@
 :root{
     --glow-color: #ff9000;
     --background-color: #cfcfcf; 
+    --error-color: #ff0000;
 }
 
 @font-face {
@@ -16,15 +17,28 @@ body{
     padding-bottom: 20px;
 }
 
-button, input{
+button, input, select{
     outline: none;
     border-radius: 5px;
     padding: 2px;
+}
+option{
+    outline: none;
+    border: none;
 }
 
 form input[type=submit]{
     background-color: white;
     border-color: white;
+}
+
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+ 
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 #gridLayout{
@@ -54,6 +68,11 @@ form input[type=submit]{
     overflow: auto;
 }
 
+#sell-error{
+    font-size: 7px; 
+    text-shadow: 0px 0px 5px var(--error-color);
+}
+
 .partyGrid{
     display: grid;
     grid-template-columns: 80% 20%;
@@ -73,13 +92,62 @@ form input[type=submit]{
     min-width: 250px;
     width: max-content;
 
-    height: 280px;
+    height: 281px;
     max-height: 100%;
 }
 
 .marketContainer{
     width: 90%;
     justify-self: end;
+}
+
+.dealContainer{
+    display: grid;
+    grid-template-columns: 50% 10% 40%;
+    grid-template-rows: 20px 15px 24px;
+    align-items: center;
+    padding: 5px;
+    
+    border: 1px solid white;
+    border-bottom: 0px;
+}
+.dealContainer:last-child{
+    border-bottom: 1px solid white;
+}
+
+.dealContainer > p {
+    margin: 0px;
+    padding: 2px;
+}
+
+.nameContainer{
+    grid-column: 1;
+}
+
+.iconContainer{
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    width: 80px;
+    height: 80px;
+}
+
+.sellerContainer{
+    grid-column: 3;
+    justify-self: end;
+}
+
+.currencyContainer, .currencyContainer::before{
+    grid-column: 1;
+    grid-row: 2 / span 3;
+    font-size: 15px;
+}
+.currencyContainer::before{
+    content: "$";
+}
+
+.buyButton{
+    grid-column: 3;
+    grid-row: 2 / span 3;
 }
 
 .left, .right, #pokename::after{

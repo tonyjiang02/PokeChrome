@@ -15,7 +15,6 @@ function refreshAll() {
     clearParty();
     getData(localStorage.getItem("username"), document.getElementById("userGrid"));
     clearMarket();
-    renderMarketplace();
 }
 function getData(username, container) {
     while (container.firstChild)
@@ -34,6 +33,9 @@ function getData(username, container) {
     })
 }
 function renderData(party, container) {
+    while (container.firstChild)
+        container.removeChild(container.firstChild);
+
     for (var i = 0; i < party.length; i++) {
         var containsAlready = false;
         var j = 0;
@@ -79,7 +81,7 @@ function initSelect(party) {
     var select = document.getElementById("pokemon-select");
     for (var i = 0; i < party.length; i++) {
         var option = document.createElement('option');
-        option.innerHTML = party[i].name;
+        option.innerHTML = party[i].name.charAt(0).toUpperCase() + party[i].name.substr(1, party[i].name.length - 1);
         select.appendChild(option);
     }
 }
@@ -96,28 +98,45 @@ document.getElementById('submitSale').onclick = function (e) {
     e.preventDefault();
 
     var price = document.getElementById('sellPrice').value;
-    var selected = document.getElementById('pokemon-select').selectedIndex;
-    var pokemonName = document.getElementById('pokemon-select').options[selected].value;
-    removePokemon(selected);
-    addSale(localStorage.getItem("username"), pokemonName, price);
-    document.getElementById('sellPrice').value = '';
-    document.getElementById('pokemon-select').options[selected].value = '';
-    renderMarketplace();
+
+    if (price <= 0) {
+        document.getElementById('sell-error').innerHTML = "Prices must be positive";
+    } else {
+        document.getElementById('sell-error').innerHTML = "";
+        var selected = document.getElementById('pokemon-select').selectedIndex;
+        var pokemonName = document.getElementById('pokemon-select').options[selected].value;
+        removePokemon(selected);
+        addSale(localStorage.getItem("username"), pokemonName, price);
+        document.getElementById('sellPrice').value = '';
+        document.getElementById('pokemon-select').options[selected].value = '';
+    }
 }
 function addSale(seller, pokemon, price) {
     var forSale = db.collection("marketplace").doc("forSale");
     var uuid = guid();
-    var obj = {
-        seller: seller,
-        pokemon: pokemon,
-        price: price,
-        reference: uuid
-    }
-    forSale.get().then(function (doc) {
-        var d = doc.data();
-        d[uuid] = obj;
-        forSale.set(d);
-    })
+    var obj;
+    $.ajax({
+        type: "GET",
+        url: url + pokemon.toLowerCase(),
+        success: function (response, status, xhr) {
+            var obj = {
+                seller: seller,
+                pokemon: pokemon,
+                price: price,
+                reference: uuid,
+                icon: response.sprites['front_default']
+            }
+
+            forSale.get().then(function (doc) {
+                var d = doc.data();
+                d[uuid] = obj;
+                forSale.set(d);
+            })
+        },
+        error: function (xhr, status, error) {
+        }
+    }) 
+    
 }
 function renderMarketplace() {
     clearMarket();
@@ -128,17 +147,26 @@ function renderMarketplace() {
         for (var key in market) {
             var sell = market[key];
             var div = document.createElement('div');
+            div.setAttribute('class', 'dealContainer');
             var seller = document.createElement('p');
+            seller.setAttribute('class', 'sellerContainer');
             var pokemon = document.createElement('p');
+            pokemon.setAttribute('class', 'nameContainer');
+            var icon = document.createElement('img');
+            icon.setAttribute('class', 'iconContainer');
+            icon.setAttribute('src', sell.icon);
             var price = document.createElement('p');
+            price.setAttribute('class', 'currencyContainer');
             var button = document.createElement('button')
             seller.innerHTML = sell.seller;
-            pokemon.innerHTML = sell.pokemon;
+            pokemon.innerHTML = sell.pokemon.charAt(0).toUpperCase() + sell.pokemon.substr(1, sell.pokemon.length - 1);
+            alert(pokemon.innerHTML);
             price.innerHTML = sell.price;
             div.setAttribute('reference', sell.reference);
             button.innerHTML = "Buy Pokemon";
-            div.appendChild(seller);
             div.appendChild(pokemon);
+            div.appendChild(icon);
+            div.appendChild(seller);
             div.appendChild(price);
             div.appendChild(button);
             container.appendChild(div);
@@ -150,35 +178,38 @@ function clearParty(container) {
         container.removeChild(container.firstChild);
 }
 var snapshotParty = db.collection("users").doc(localStorage.getItem("username"));
-snapshotParty.onSnapshot({
-    includeMetadataChanges: true
-}, function(doc) {
-    console.log("hi");
+snapshotParty.onSnapshot({}, function(doc) {
     var container = document.getElementById("userGrid");
     getData(localStorage.getItem("username"), container);
 })
 var snapshotSale = db.collection("marketplace").doc("forSale");
-snapshotSale.onSnapshot({
-    includeMetadataChanges: true
-}, function (doc) {
+snapshotSale.onSnapshot({}, function (doc) {
     clearMarket();
     var market = doc.data();
     var marketContainer = document.getElementById("marketplace");
     for (var key in market) {
         var sell = market[key];
         var div = document.createElement('div');
+        div.setAttribute('class', 'dealContainer');
         var seller = document.createElement('p');
+        seller.setAttribute('class', 'sellerContainer');
         var pokemon = document.createElement('p');
+        pokemon.setAttribute('class', 'nameContainer');
+        var icon = document.createElement('img');
+        icon.setAttribute('class', 'iconContainer');
+        icon.setAttribute('src', sell.icon);
         var price = document.createElement('p');
+        price.setAttribute('class', 'currencyContainer');
         var button = document.createElement('button')
         seller.innerHTML = sell.seller;
-        pokemon.innerHTML = sell.pokemon;
+        pokemon.innerHTML = sell.pokemon.charAt(0).toUpperCase() + sell.pokemon.substr(1, sell.pokemon.length - 1);
         price.innerHTML = sell.price;
         div.setAttribute('reference', sell.reference);
         button.innerHTML = "Buy Pokemon";
         button.setAttribute('class', "buyButton");
-        div.appendChild(seller);
         div.appendChild(pokemon);
+        div.appendChild(icon);
+        div.appendChild(seller);
         div.appendChild(price);
         div.appendChild(button);
         marketContainer.appendChild(div)
@@ -205,14 +236,14 @@ function addButtonListeners() {
                 data["pokecoins"] = parseInt(data["pokecoins"],10) + parseInt(price,10);
                 merchant.set(data);
             })
-            var reciever = db.collection('users').doc(localStorage.getItem("username"));
-            reciever.get().then(function (doc) {
+            var receiver = db.collection('users').doc(localStorage.getItem("username"));
+            receiver.get().then(function (doc) {
                 var data = doc.data();
                 data['pokecoins'] = parseInt(data['pokecoins'],10) - parseInt(price,10);
                 var url = "https://pokeapi.co/api/v2/pokemon/";
                 $.ajax({
                     type: "GET",
-                    url: url + pokemon,
+                    url: url + pokemon.toLowerCase(),
                     success: function (response, status, xhr) {
                         var obj = {
                             id: response.id,
@@ -220,7 +251,7 @@ function addButtonListeners() {
                             sprite: response.sprites['front_default']
                         }
                         data['party'].push(obj);
-                        reciever.set(data);
+                        receiver.set(data);
                     },
                     error: function (xhr, status, error) {
                     }
