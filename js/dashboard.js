@@ -17,9 +17,6 @@ function refreshAll() {
     clearMarket();
     renderMarketplace();
 }
-$(document).ready(function () {
-    getData(localStorage.getItem("username"), document.getElementById("userGrid"));
-})
 function getData(username, container) {
     while (container.firstChild)
         container.removeChild(container.firstChild);
@@ -35,181 +32,6 @@ function getData(username, container) {
             initSelect(partyList);
         }
     })
-}
-function updateData(money, party) {
-    var userDoc = db.collection("users").doc(localStorage.getItem("username"));
-    userDoc.update({
-        money: money,
-        party: party
-    })
-}
-function initSelect(party) {
-    var select = document.getElementById("pokemon_select")
-    for (var i = 0; i < party.length; i++) {
-        var option = document.createElement('option');
-        option.innerHTML = party[i].name;
-        select.appendChild(option);
-    }
-}
-function removePokemon(index) {
-    partyList.splice(index, 1);
-    updateData(moneyAmount, partyList);
-}
-document.getElementById('submitSale').onclick = function () {
-    var price = document.getElementById('sellPrice').value;
-    var selected = document.getElementById('pokemon_select').selectedIndex;
-    var pokemonName = document.getElementById('pokemon_select').options[selected].value;
-    removePokemon(selected);
-    addSale(localStorage.getItem("username"), pokemonName, price);
-    document.getElementById('sellPrice').value = '';
-    document.getElementById('pokemon_select').options[selected].value = '';
-    renderMarketplace();
-}
-function addSale(seller, pokemon, price) {
-    var forSale = db.collection("marketplace").doc("forSale");
-    var uuid = guid();
-    var obj = {
-        seller: seller,
-        pokemon: pokemon,
-        price: price,
-        reference: uuid
-    }
-    forSale.get().then(function (doc) {
-        var d = doc.data();
-        d[uuid] = obj;
-        forSale.set(d);
-    })
-}
-function renderMarketplace() {
-    clearMarket();
-    var forSale = db.collection('marketplace').doc("forSale");
-    var container = document.getElementById("marketplace");
-    forSale.get().then(function (doc) {
-        var market = doc.data();
-        for (var key in market) {
-            var sell = market[key];
-            console.log(sell);
-            var div = document.createElement('div');
-            var seller = document.createElement('p');
-            var pokemon = document.createElement('p');
-            var price = document.createElement('p');
-            var button = document.createElement('button')
-            seller.innerHTML = sell.seller;
-            pokemon.innerHTML = sell.pokemon;
-            price.innerHTML = sell.price;
-            div.setAttribute('reference', sell.reference);
-            button.innerHTML = "Buy Pokemon";
-            div.appendChild(seller);
-            div.appendChild(pokemon);
-            div.appendChild(price);
-            div.appendChild(button);
-            container.appendChild(div);
-        }
-    })
-}
-function clearParty(container) {
-    while (container.firstChild)
-        container.removeChild(container.firstChild);
-}
-var snapshotParty = db.collection("users").doc(localStorage.getItem("username"));
-snapshotParty.onSnapshot({
-    includeMetadataChanges: true
-}, function(doc) {
-    var container = document.getElementById("userGrid");
-    clearParty(container);
-    getData(localStorage.getItem("username"),container);
-})
-var snapshotSale = db.collection("marketplace").doc("forSale");
-snapshotSale.onSnapshot({
-    includeMetadataChanges: true
-}, function (doc) {
-    clearMarket();
-    var market = doc.data();
-    var marketContainer = document.getElementById("marketplace");
-    for (var key in market) {
-        var sell = market[key];
-        console.log("snapshot");
-        var div = document.createElement('div');
-        var seller = document.createElement('p');
-        var pokemon = document.createElement('p');
-        var price = document.createElement('p');
-        var button = document.createElement('button')
-        seller.innerHTML = sell.seller;
-        pokemon.innerHTML = sell.pokemon;
-        price.innerHTML = sell.price;
-        div.setAttribute('reference', sell.reference);
-        button.innerHTML = "Buy Pokemon";
-        button.setAttribute('class', "buyButton");
-        div.appendChild(seller);
-        div.appendChild(pokemon);
-        div.appendChild(price);
-        div.appendChild(button);
-        marketContainer.appendChild(div)
-    }
-    addButtonListeners();
-});
-function addButtonListeners() {
-
-    $(".buyButton").click(function () {
-        console.log('clicked')
-        var parent = $(this).parent().closest('div');
-        var reference = parent.attr("reference");
-        var forSale = db.collection('marketplace').doc("forSale");
-        forSale.get().then(function (doc) {
-            var data = doc.data();
-            var sale = data[reference];
-            var seller = sale.seller;
-            var price = sale.price;
-            var pokemon = sale.pokemon;
-            console.log(pokemon);
-            var user = db.collection('users').doc(seller);
-            user.get().then(function (doc) {
-                var data = doc.data();
-                data["pokecoins"] = data["pokecoins"] + price;
-                user.set(data);
-            })
-            var reciever = db.collection('users').doc(localStorage.getItem("username"));
-            reciever.get().then(function (doc) {
-                var data = doc.data();
-                data['pokecoins'] = data['pokecoins'] - price;
-                var url = "https://pokeapi.co/api/v2/pokemon/";
-                $.ajax({
-                    type: "GET",
-                    url: url + pokemon,
-                    success: function (response, status, xhr) {
-                        var obj = {
-                            id: response.id,
-                            name: response.name,
-                            sprite: response.sprites['front_default']
-                        }
-                        data['party'].push(obj);
-                        reciever.set(data);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log("error")
-                    }
-                })
-            })
-            delete data[reference]
-            forSale.set(data);
-        })
-    })
-
-}
-
-function guid() {
-    function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}
-function clearMarket() {
-    var market = document.getElementById("marketplace");
-    while (market.firstChild) {
-        market.removeChild(market.firstChild);
-    }
 }
 function renderData(party, container) {
     for (var i = 0; i < party.length; i++) {
@@ -242,6 +64,187 @@ function renderData(party, container) {
             icon.appendChild(img);
             container.appendChild(icon);
         }
+    }
+}
+function updateData(money, party) {
+    var userDoc = db.collection("users").doc(localStorage.getItem("username"));
+    userDoc.update({
+        money: money,
+        party: party
+    })
+}
+function initSelect(party) {
+    clearSelect();
+
+    var select = document.getElementById("pokemon-select");
+    for (var i = 0; i < party.length; i++) {
+        var option = document.createElement('option');
+        option.innerHTML = party[i].name;
+        select.appendChild(option);
+    }
+}
+function removePokemon(index) {
+    partyList.splice(index, 1);
+    updateData(moneyAmount, partyList);
+}
+function clearSelect() {
+    var select = document.getElementById("pokemon-select");
+    while(select.firstChild)
+        select.removeChild(select.firstChild);
+}
+document.getElementById('submitSale').onclick = function (e) {
+    e.preventDefault();
+
+    var price = document.getElementById('sellPrice').value;
+    var selected = document.getElementById('pokemon-select').selectedIndex;
+    var pokemonName = document.getElementById('pokemon-select').options[selected].value;
+    removePokemon(selected);
+    addSale(localStorage.getItem("username"), pokemonName, price);
+    document.getElementById('sellPrice').value = '';
+    document.getElementById('pokemon-select').options[selected].value = '';
+    renderMarketplace();
+}
+function addSale(seller, pokemon, price) {
+    var forSale = db.collection("marketplace").doc("forSale");
+    var uuid = guid();
+    var obj = {
+        seller: seller,
+        pokemon: pokemon,
+        price: price,
+        reference: uuid
+    }
+    forSale.get().then(function (doc) {
+        var d = doc.data();
+        d[uuid] = obj;
+        forSale.set(d);
+    })
+}
+function renderMarketplace() {
+    clearMarket();
+    var forSale = db.collection('marketplace').doc("forSale");
+    var container = document.getElementById("marketplace");
+    forSale.get().then(function (doc) {
+        var market = doc.data();
+        for (var key in market) {
+            var sell = market[key];
+            var div = document.createElement('div');
+            var seller = document.createElement('p');
+            var pokemon = document.createElement('p');
+            var price = document.createElement('p');
+            var button = document.createElement('button')
+            seller.innerHTML = sell.seller;
+            pokemon.innerHTML = sell.pokemon;
+            price.innerHTML = sell.price;
+            div.setAttribute('reference', sell.reference);
+            button.innerHTML = "Buy Pokemon";
+            div.appendChild(seller);
+            div.appendChild(pokemon);
+            div.appendChild(price);
+            div.appendChild(button);
+            container.appendChild(div);
+        }
+    })
+}
+function clearParty(container) {
+    while (container.firstChild)
+        container.removeChild(container.firstChild);
+}
+var snapshotParty = db.collection("users").doc(localStorage.getItem("username"));
+snapshotParty.onSnapshot({
+    includeMetadataChanges: true
+}, function(doc) {
+    console.log("hi");
+    var container = document.getElementById("userGrid");
+    getData(localStorage.getItem("username"), container);
+})
+var snapshotSale = db.collection("marketplace").doc("forSale");
+snapshotSale.onSnapshot({
+    includeMetadataChanges: true
+}, function (doc) {
+    clearMarket();
+    var market = doc.data();
+    var marketContainer = document.getElementById("marketplace");
+    for (var key in market) {
+        var sell = market[key];
+        var div = document.createElement('div');
+        var seller = document.createElement('p');
+        var pokemon = document.createElement('p');
+        var price = document.createElement('p');
+        var button = document.createElement('button')
+        seller.innerHTML = sell.seller;
+        pokemon.innerHTML = sell.pokemon;
+        price.innerHTML = sell.price;
+        div.setAttribute('reference', sell.reference);
+        button.innerHTML = "Buy Pokemon";
+        button.setAttribute('class', "buyButton");
+        div.appendChild(seller);
+        div.appendChild(pokemon);
+        div.appendChild(price);
+        div.appendChild(button);
+        marketContainer.appendChild(div)
+    }
+    addButtonListeners();
+});
+function addButtonListeners() {
+
+    $(".buyButton").click(function (e) {
+        e.preventDefault();
+
+        var parent = $(this).parent().closest('div');
+        var reference = parent.attr("reference");
+        var forSale = db.collection('marketplace').doc("forSale");
+        forSale.get().then(function (doc) {
+            var data = doc.data();
+            var sale = data[reference];
+            var seller = sale.seller;
+            var price = sale.price;
+            var pokemon = sale.pokemon;
+            var user = db.collection('users').doc(seller);
+            user.get().then(function (doc) {
+                var data = doc.data();
+                data["pokecoins"] = data["pokecoins"] + price;
+                user.set(data);
+            })
+            var reciever = db.collection('users').doc(localStorage.getItem("username"));
+            reciever.get().then(function (doc) {
+                var data = doc.data();
+                data['pokecoins'] = data['pokecoins'] - price;
+                var url = "https://pokeapi.co/api/v2/pokemon/";
+                $.ajax({
+                    type: "GET",
+                    url: url + pokemon,
+                    success: function (response, status, xhr) {
+                        var obj = {
+                            id: response.id,
+                            name: response.name,
+                            sprite: response.sprites['front_default']
+                        }
+                        data['party'].push(obj);
+                        reciever.set(data);
+                    },
+                    error: function (xhr, status, error) {
+                    }
+                })
+            })
+            delete data[reference]
+            forSale.set(data);
+        })
+    })
+
+}
+
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
+function clearMarket() {
+    var market = document.getElementById("marketplace");
+    while (market.firstChild) {
+        market.removeChild(market.firstChild);
     }
 }
 
