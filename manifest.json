@@ -11,10 +11,10 @@
                 "<all_urls>"
             ],
             "js": [
-                "jquery-3.3.1.min.js",
-                "pokemonscript.js"
+                "/js/jquery-3.3.1.min.js",
+                "/js/pokemonscript.js"
             ],
-            "css": ["overlayStyle.css"]
+            "css": ["/css/overlayStyle.css"]
         }
     ],
     "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://cdnjs.cloudflare.com/* https://code.jquery.com/* https://stackpath.bootstrapcdn.com/* https://pokeapi.co/* https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
@@ -27,9 +27,9 @@
         "https://pokeapi.co/*"
     ],
     "icons": {
-        "128": "icon.png"
+        "128": "/resources/icon.png"
     },
     "web_accessible_resources": [
-        "press-start.ttf"
+        "/resources/press-start.ttf"
     ]
 }

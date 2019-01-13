@@ -1,6 +1,6 @@
 @font-face {
     font-family: press-start;
-    src: url('chrome-extension://__MSG_@@extension_id__/press-start.ttf');
+    src: url('chrome-extension://__MSG_@@extension_id__/resources/press-start.ttf');
 }
 
 #overlay-pokecoin-pokemon {
