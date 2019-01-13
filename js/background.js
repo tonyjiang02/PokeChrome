@@ -42,7 +42,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     } else if (request.msg === "click"){
         pokeClick(request.data);
     }else if (request.msg ==="openDashboard") {
-        chrome.tabs.create({url:"./dashboard.html"})
+        chrome.tabs.create({url:"/dashboard.html"})
     }
 });
 function spawnPokemon(id) {
