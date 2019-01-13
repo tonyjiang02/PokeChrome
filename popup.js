@@ -63,6 +63,11 @@ document.getElementById("loginGrid").onsubmit = function(e){
 document.getElementById("logout").onclick = function(){
     logout();
 }
+document.getElementById("showDashboard").onclick = function() {
+    chrome.runtime.sendMessage({
+        msg:"openDashboard"
+    })
+}
 
 window.onload = function() {
     if (localStorage.getItem("username")) {

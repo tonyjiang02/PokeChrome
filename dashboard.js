@@ -13,11 +13,17 @@ var party;
 var money;
 var username = localStorage.getItem("username");
 var password = localStorage.getItem("password");
-function getData() {
+$(document).ready(function() {
+    getData(renderData);
+})
+function getData(callback) {
     var userDoc = db.collection("users").doc(username);
     userDoc.get().then(function(doc) {
         money = doc.data().pokecoins;
         party = doc.data().party;
+        console.log(party);
+        console.log(money);
+        callback();
     })
 }
 function updateData() {
@@ -28,6 +34,22 @@ function updateData() {
     })
 }
 function renderData() {
-    var names = document.getElementById('names');
-    var sprites = document.getElementById('sprites');
+    var container = document.getElementById("container");
+    for(var i =0; i<party.length; i++) {
+        var row = document.createElement('div');
+        row.setAttribute('class','row');
+        var col1 = document.createElement('div');
+        col1.setAttribute('class','col-md-2');
+        var col2 = document.createElement('div');
+        col2.setAttribute('class','col-md-4');
+        col1.innerHTML =party[i].name;
+        var img = document.createElement('img');
+        img.setAttribute('src', party[i].sprite);
+        img.style.width = "40px";
+        img.style.height = "40px";
+        col2.appendChild(img);
+        row.appendChild(col1);
+        row.appendChild(col2); 
+        container.appendChild(row);
+    }
 }
