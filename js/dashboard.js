@@ -69,7 +69,7 @@ function renderData(party, container) {
 function updateData(money, party) {
     var userDoc = db.collection("users").doc(localStorage.getItem("username"));
     userDoc.update({
-        money: money,
+        pokecoins: money,
         party: party
     })
 }
@@ -199,16 +199,16 @@ function addButtonListeners() {
             var seller = sale.seller;
             var price = sale.price;
             var pokemon = sale.pokemon;
-            var user = db.collection('users').doc(seller);
-            user.get().then(function (doc) {
+            var merchant = db.collection('users').doc(seller);
+            merchant.get().then(function (doc) {
                 var data = doc.data();
-                data["pokecoins"] = data["pokecoins"] + price;
-                user.set(data);
+                data["pokecoins"] = parseInt(data["pokecoins"],10) + parseInt(price,10);
+                merchant.set(data);
             })
             var reciever = db.collection('users').doc(localStorage.getItem("username"));
             reciever.get().then(function (doc) {
                 var data = doc.data();
-                data['pokecoins'] = data['pokecoins'] - price;
+                data['pokecoins'] = parseInt(data['pokecoins'],10) - parseInt(price,10);
                 var url = "https://pokeapi.co/api/v2/pokemon/";
                 $.ajax({
                     type: "GET",
