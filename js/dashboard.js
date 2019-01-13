@@ -12,7 +12,7 @@ db = firebase.firestore();
 var moneyAmount;
 var partyList;
 function refreshAll() {
-    clearParty()
+    clearParty();
     getData(localStorage.getItem("username"), document.getElementById("userGrid"));
     clearMarket();
     renderMarketplace();

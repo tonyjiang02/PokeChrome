@@ -9,11 +9,11 @@ var config = {
 };
 firebase.initializeApp(config);
 db = firebase.firestore();
-function hasUsername(username,data) {
+function hasUsername(username, data) {
     var master = db.collection("users").doc("master");
     master.get().then(function (doc) {
-        var data = doc.data();
-        var users = data.users;
+        var docList = doc.data();
+        var users = docList.users;
         var found = false;
         for (var i = 0; i < users.length; i++) {
             if (users[i] == username) {
@@ -21,6 +21,7 @@ function hasUsername(username,data) {
                 break;
             }
         }    
+
         if (found) {
             notUnique();
         } else {
@@ -28,7 +29,7 @@ function hasUsername(username,data) {
         }
     })
 }
-function checkPassword(username,password, data) {
+function checkPassword(username, password, data) {
     var doc = db.collection('users').doc(username);
     doc.get().then(function(doc) {
         var pass = doc.data().password;
@@ -69,8 +70,8 @@ function login(isLogin, username, password) {
         password: password
     }
     if(isLogin) {
-        checkPassword(username,password,data)
-    }else {
+        checkPassword(username,password,data);
+    } else {
         hasUsername(username,data);
     }
 }
