@@ -230,16 +230,12 @@ function addButtonListeners() {
             var seller = sale.seller;
             var price = sale.price;
             var pokemon = sale.pokemon;
-            var merchant = db.collection('users').doc(seller);
-            merchant.get().then(function (doc) {
-                var data = doc.data();
-                data["pokecoins"] = data["pokecoins"] + parseInt(price);
-                merchant.set(data);
+            var receiver = db.collection('users').doc(localStorage.getItem("username"));
+            receiver.get().then(function (doc) {
+                var recData = doc.data();
+                if (parseInt(recData['pokecoins'],10) - parseInt(price,10) > 0) {
+                    recDdata['pokecoins'] = parseInt(data['pokecoins'],10) - parseInt(price,10);
 
-                var receiver = db.collection('users').doc(localStorage.getItem("username"));
-                receiver.get().then(function (doc) {
-                    var data = doc.data();
-                    data['pokecoins'] = parseInt(data['pokecoins'],10) - parseInt(price,10);
                     var url = "https://pokeapi.co/api/v2/pokemon/";
                     $.ajax({
                         type: "GET",
@@ -250,16 +246,27 @@ function addButtonListeners() {
                                 name: response.name,
                                 sprite: response.sprites['front_default']
                             }
-                            data['party'].push(obj);
+                            recData['party'].push(obj);
                             receiver.set(data);
+
+                            var merchant = db.collection('users').doc(seller);
+                            merchant.get().then(function (doc) {
+                                var data = doc.data();
+                                data["pokecoins"] = data["pokecoins"] + parseInt(price);
+                                merchant.set(data);
+                            })
                         },
                         error: function (xhr, status, error) {
                         }
                     })
-                })
+
+                    delete data[reference];
+                    forSale.set(data);
+                } else {
+                    e.target.innerHTML = "Can't Afford";
+                    e.target.style.color = "red";
+                }
             })
-            delete data[reference]
-            forSale.set(data);
         })
     })
 
