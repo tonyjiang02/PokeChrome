@@ -1,13 +1,42 @@
-#overlay {
+@font-face {
+    font-family: press-start;
+    src: url('chrome-extension://__MSG_@@extension_id__/press-start.ttf');
+}
+
+#overlay-pokecoin-pokemon {
     position: fixed; /* Sit on top of the page content */
-    display: none; /* Hidden by default */
+    display: block;
     width: 100%; /* Full width (cover the whole page) */
     height: 100%; /* Full height (cover the whole page) */
     top: 0; 
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
-    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
-    cursor: pointer; /* Add a pointer on hover */
+}
+#label-pokecoin-pokemon {
+    font-family: press-start;
+    font-size: 30px;
+    color: black;
+
+    position: fixed;
+    top: 10%;
+    left: 20%;
+}
+#sprite-pokecoin-pokemon {
+    position: fixed; /* Sit on top of the page content */
+    display: block;
+    width: 200px;
+    height: 200px;
+    top: 20%; 
+    left: 40%;
+
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+#sprite-pokecoin-pokemon:hover {
+    cursor: pointer;
 }

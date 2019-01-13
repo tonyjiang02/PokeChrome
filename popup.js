@@ -22,6 +22,7 @@ function setMoney(money) {
 }
 function login(isLogin, username, password) {
     var data = {
+        msg: "login",
         isLogin: isLogin,
         username: username,
         password: password

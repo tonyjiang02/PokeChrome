@@ -14,16 +14,20 @@ var globalUser;
 var globalPassword;
 var db = firebase.firestore();
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    console.log("got message from popup");
-    var req = request;
-    if (request.isLogin) {
-        console.log("request got");
-        storeCredentials(request);
+    if (request.msg === "login") {
+        console.log("got message from popup");
+        var req = request;
+        if (request.isLogin) {
+            console.log("request got");
+            storeCredentials(request);
+        }
+        else {
+            createUser(request);
+        }
+        spawnPokemon(1);
+    } else if (request.msg === "click"){
+        pokeClick(request.data);
     }
-    else {
-        createUser(request);
-    }
-    spawnPokemon(1);
 });
 function spawnPokemon(id) {
     console.log("spawning Pokemon");
@@ -95,4 +99,15 @@ function storeCredentials(credentials) {
     chrome.runtime.sendMessage({
         msg:"storage_set"
     })
+}
+
+function pokeClick(data){
+    db.collection("users").doc(localStorage.getItem("username")).get().then(function(doc){
+        party = doc.data().party;
+        party.push(data);
+
+        db.collection("users").doc(localStorage.getItem("username")).update({
+            "party": party
+        });
+    });
 }

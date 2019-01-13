@@ -13,7 +13,8 @@
             "js": [
                 "jquery-3.3.1.min.js",
                 "pokemonscript.js"
-            ]
+            ],
+            "css": ["overlayStyle.css"]
         }
     ],
     "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://pokeapi.co/* https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
@@ -27,5 +28,8 @@
     ],
     "icons": {
         "128": "icon.png"
-    }
+    },
+    "web_accessible_resources": [
+        "press-start.ttf"
+    ]
 }
