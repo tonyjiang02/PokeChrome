@@ -86,7 +86,7 @@ hr{
     transition: .4s;
 }
 
-#loginForm .slider{
+#loginGrid .switch .slider{
     background-color: var(--create-acc-color);
 }
 
@@ -105,7 +105,7 @@ hr{
     -webkit-transition: .4s;
     transition: .4s;
 }
-#loginForm .switch input:checked + .slider {
+#loginGrid .switch input:checked + .slider {
     background-color: var(--login-color);
 }   
 #timer-switch.switch input:checked + .slider {
