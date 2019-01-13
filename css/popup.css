@@ -117,7 +117,6 @@ button, input{
     display: none;
     grid-template-columns: auto auto;
     justify-items: center;
-    align-self: end;
 
     border-radius: 5px;
     background-color: var(--background-color);
