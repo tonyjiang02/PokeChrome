@@ -235,7 +235,7 @@ function addButtonListeners() {
             receiver.get().then(function (doc) {
                 var recData = doc.data();
                 if (parseInt(recData['pokecoins'],10) - parseInt(price,10) > 0) {
-                    recDdata['pokecoins'] = parseInt(data['pokecoins'],10) - parseInt(price,10);
+                    recData['pokecoins'] = parseInt(recData['pokecoins'],10) - parseInt(price,10);
 
                     var url = "https://pokeapi.co/api/v2/pokemon/";
                     $.ajax({
@@ -248,7 +248,7 @@ function addButtonListeners() {
                                 sprite: response.sprites['front_default']
                             }
                             recData['party'].push(obj);
-                            receiver.set(data);
+                            receiver.set(recData);
 
                             var merchant = db.collection('users').doc(seller);
                             merchant.get().then(function (doc) {
@@ -298,9 +298,11 @@ $(document).ready(function() {
 function addDusterListeners() {
     $("#dusterSubmit").click(function() {
         var index = document.getElementById("duster-select").selectedIndex;
-        partyList.splice(index, 1);
-        moneyAmount = parseInt(moneyAmount) + 5;
-        updateData(moneyAmount, partyList);
-        initSelect(partyList,"duster-select");
+        if (partyList.length > 0) {
+            partyList.splice(index, 1);
+            moneyAmount = parseInt(moneyAmount) + 5;
+            updateData(moneyAmount, partyList);
+            initSelect(partyList,"duster-select");
+        }
     })
 }
