@@ -13,6 +13,8 @@
     right: 0;
     bottom: 0;
 
+    pointer-events: inital;
+
     z-index: 2147483647;
 }
 #label-pokecoin-pokemon {

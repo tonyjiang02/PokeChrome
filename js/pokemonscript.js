@@ -30,8 +30,9 @@ function createOverlay(pokemonData) {
     sprite.style.left = (posX + 5).toString() + "%";
     sprite.style.top = (posY + 5).toString() + "%";
     sprite.onclick = function(e){
-        spriteNode = e.srcElement;
-        labelNode = e.srcElement.previousSibling;
+        var parentNode = e.srcElement.parentElement;
+        var spriteNode = e.srcElement;
+        var labelNode = e.srcElement.previousSibling;
         chrome.runtime.sendMessage({
             msg: "click",
             data: {
@@ -43,6 +44,8 @@ function createOverlay(pokemonData) {
 
         spriteNode.remove();
         labelNode.remove();
+        if (parentNode.children.length == 0) 
+                parentNode.remove();
     };
     overlay.appendChild(sprite);
 
