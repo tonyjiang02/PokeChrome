@@ -67,9 +67,9 @@ window.onload = function() {
     if (localStorage.getItem("username")) {
         login(false, localStorage.getItem("username"), localStorage.getItem("password"));
         getMoney(localStorage.getItem("username"), localStorage.getItem("password"));
-    } else {
-        document.getElementById("login-checkbox").checked = true;
     }
+    
+    document.getElementById("login-checkbox").checked = true;
     document.getElementById("pokecoin-value").innerHTML = "--";
 }
 chrome.runtime.onMessage.addListener(function(request,sender,sendResponse) {

@@ -22,5 +22,19 @@ function getData(id) {
     })
 }
 function createOverlay(id) {
+    var overlayStyle = document.createElement("link");
 
+    overlayStyle.type = "text/css";
+    overlayStyle.rel = "stylesheet";
+    overlayStyle.href = "overlayStyle.css";
+    document.head.appendChild(overlayStyle);
+
+    var overlay = document.createElement('div');
+    overlay.setAttribute('id', 'overlay');
+    
+    var sprite = document.createElement('img');
+    sprite.setAttribute('src', "icon.png");
+
+    overlay.appendChild(sprite);
+    document.body.appendChild(overlay);
 }
