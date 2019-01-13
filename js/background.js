@@ -49,14 +49,14 @@ function mixedSpawn() {
 var rand = 20000
 var interval;
 function randomize() {
-    if (localStorage.getItem("username")) {
+    if (localStorage.getItem("username") && localStorage.getItem("timer")) {
         mixedSpawn();
         rand = Math.round(Math.random() * (60000 - 20000)) + 20000;
         clearInterval(interval);
         interval = setInterval('randomize()', rand)
     }
 }
-// interval = setInterval('randomize()', rand);
+interval = setInterval('randomize()', rand);
 function spawnPokemon(id) {
     $.ajax({
         type: "GET",

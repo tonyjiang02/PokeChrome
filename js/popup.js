@@ -81,7 +81,14 @@ function loginSuccess(data) {
     document.getElementById("loginGrid").style.display = "none";
     document.getElementById("main").style.display = "grid";
 }
-
+document.getElementById("timer-checkbox").onchange = function() {
+    var onTimer = document.getElementById("timer-checkbox").checked;
+    if(onTimer) {
+        localStorage.setItem('timer', true);
+    }else {
+        localStorage.setItem('timer',false);
+    }
+}
 function logout() {
     localStorage.clear();
     document.getElementById("loginGrid").style.display = "grid";
@@ -105,7 +112,7 @@ document.getElementById("loginGrid").onsubmit = function (e) {
     var isLogin = document.getElementById("login-checkbox").checked;
     var username = document.getElementById("login-username").value;
     var password = document.getElementById("login-password").value;
-
+    
     login(isLogin, username, password);
 }
 
