@@ -182,6 +182,7 @@ var snapshotParty = db.collection("users").doc(localStorage.getItem("username"))
 snapshotParty.onSnapshot({}, function(doc) {
     var container = document.getElementById("userGrid");
     getData(localStorage.getItem("username"), container);
+    getData(document.getElementById("search-username").value, document.getElementById("searchGrid"));
 })
 var snapshotSale = db.collection("marketplace").doc("forSale");
 snapshotSale.onSnapshot({}, function (doc) {
