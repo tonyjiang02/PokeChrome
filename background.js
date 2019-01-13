@@ -22,6 +22,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     }
     else {
         createUser(request);
+        storeCredentials(request);
     }
     spawnPokemon();
 });
@@ -76,4 +77,7 @@ function storeCredentials(credentials) {
 
     localStorage.setItem('username', username);
     localStorage.setItem('password', password);
+    chrome.runtime.sendMessage({
+        msg:"storage_set"
+    })
 }
