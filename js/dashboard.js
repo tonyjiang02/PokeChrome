@@ -233,13 +233,19 @@ function addButtonListeners() {
             var merchant = db.collection('users').doc(seller);
             merchant.get().then(function (doc) {
                 var data = doc.data();
-                data["pokecoins"] = parseInt(data["pokecoins"],10) + parseInt(price,10);
+                var curr = Number(data['pokecoins']);
+                curr +=Number(price);
+                data["pokecoins"] = Number(curr);
+                console.log(data["pokecoins"]);
                 merchant.set(data);
             })
             var receiver = db.collection('users').doc(localStorage.getItem("username"));
             receiver.get().then(function (doc) {
                 var data = doc.data();
-                data['pokecoins'] = parseInt(data['pokecoins'],10) - parseInt(price,10);
+                var curr = parseInt(data['pokecoins'],0);
+                curr-=price
+                data['pokecoins'] = Number(curr);
+                moneyAmount = curr;
                 var url = "https://pokeapi.co/api/v2/pokemon/";
                 $.ajax({
                     type: "GET",
