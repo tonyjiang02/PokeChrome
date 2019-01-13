@@ -16,13 +16,14 @@
             ]
         }
     ],
-    "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
+    "content_security_policy": "script-src 'self' https://www.gstatic.com/ https://pokeapi.co/* https://*.firebaseio.com https://www.googleapis.com; object-src 'self'",
     "background": {
         "page": "background.html"
     },
     "permissions": [
         "storage",
-        "tabs"
+        "tabs",
+        "https://pokeapi.co/*"
     ],
     "icons": {
         "128": "icon.png"
