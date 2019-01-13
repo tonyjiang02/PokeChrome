@@ -11,6 +11,12 @@ var url = "https://pokeapi.co/api/v2/pokemon/";
 db = firebase.firestore();
 var moneyAmount;
 var partyList;
+function refreshAll() {
+    clearParty()
+    getData(localStorage.getItem("username"), document.getElementById("userGrid"));
+    clearMarket();
+    renderMarketplace();
+}
 $(document).ready(function () {
     getData(localStorage.getItem("username"), document.getElementById("userGrid"));
 })
@@ -23,7 +29,7 @@ function getData(username, container) {
         var money = doc.data().pokecoins;
         var party = doc.data().party;
         renderData(party, container);
-        if(username === localStorage.getItem("username")) {
+        if (username === localStorage.getItem("username")) {
             console.log('render own')
             partyList = party;
             moneyAmount = money;
@@ -103,6 +109,18 @@ function renderMarketplace() {
         }
     })
 }
+function clearParty(container) {
+    while (container.firstChild)
+        container.removeChild(container.firstChild);
+}
+var snapshotParty = db.collection("users").doc(localStorage.getItem("username"));
+snapshotParty.onSnapshot({
+    includeMetadataChanges: true,
+}, function(doc) {
+    var container = document.getElementById("userGrid");
+    clearParty(container);
+    getData(localStorage.getItem("username"),container);
+})
 var snapshotSale = db.collection("marketplace").doc("forSale");
 snapshotSale.onSnapshot({
     includeMetadataChanges: true
@@ -123,13 +141,64 @@ snapshotSale.onSnapshot({
         price.innerHTML = sell.price;
         div.setAttribute('reference', sell.reference);
         button.innerHTML = "Buy Pokemon";
+        button.setAttribute('class', "buyButton");
         div.appendChild(seller);
         div.appendChild(pokemon);
         div.appendChild(price);
         div.appendChild(button);
         marketContainer.appendChild(div)
     }
+    addButtonListeners();
 });
+function addButtonListeners() {
+
+    $(".buyButton").click(function () {
+        console.log('clicked')
+        var parent = $(this).parent().closest('div');
+        var reference = parent.attr("reference");
+        var forSale = db.collection('marketplace').doc("forSale");
+        forSale.get().then(function (doc) {
+            var data = doc.data();
+            var sale = data[reference];
+            var seller = sale.seller;
+            var price = sale.price;
+            var pokemon = sale.pokemon;
+            console.log(pokemon);
+            var user = db.collection('users').doc(seller);
+            user.get().then(function (doc) {
+                var data = doc.data();
+                data["pokecoins"] = data["pokecoins"] + price;
+                user.set(data);
+            })
+            var reciever = db.collection('users').doc(localStorage.getItem("username"));
+            reciever.get().then(function (doc) {
+                var data = doc.data();
+                data['pokecoins'] = data['pokecoins'] - price;
+                var url = "https://pokeapi.co/api/v2/pokemon/";
+                $.ajax({
+                    type: "GET",
+                    url: url + pokemon,
+                    success: function (response, status, xhr) {
+                        var obj = {
+                            id: response.id,
+                            name: response.name,
+                            sprite: response.sprites['front_default']
+                        }
+                        data['party'].push(obj);
+                        reciever.set(data);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("error")
+                    }
+                })
+            })
+            delete data[reference]
+            forSale.set(data);
+        })
+    })
+
+}
+
 function guid() {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000)
