@@ -10,6 +10,24 @@ function login(isLogin, username, password) {
     document.getElementById("main").style.display = "grid";
 }
 
+function logout(){
+    localStorage.clear();
+    document.getElementById("loginGrid").style.display = "grid";
+    document.getElementById("main").style.display = "none";
+}
+
+document.getElementById("login-checkbox").onclick = function(){
+    var color;
+    if (document.getElementById("login-checkbox").checked){
+        color = getComputedStyle(document.body).getPropertyValue('--login-color');
+    } else {
+        color = getComputedStyle(document.body).getPropertyValue('--create-acc-color');
+    }
+
+    document.getElementById("login-submit").style.backgroundColor = color;
+    document.getElementById("login-submit").style.borderColor = color;
+}
+
 document.getElementById("loginGrid").onsubmit = function(e){
     e.preventDefault();
     var isLogin = document.getElementById("login-checkbox").checked;
@@ -17,6 +35,10 @@ document.getElementById("loginGrid").onsubmit = function(e){
     var password = document.getElementById("login-password").value;
 
     login(isLogin, username, password);
+}
+
+document.getElementById("logout").onclick = function(){
+    logout();
 }
 
 window.onload = function() {
